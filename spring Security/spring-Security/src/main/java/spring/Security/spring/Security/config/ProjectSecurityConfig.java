@@ -24,7 +24,8 @@ public class ProjectSecurityConfig {
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)throws Exception{
        http.csrf().disable()   //disable by spring security is given becuse that enable block the post,put , delete request
                .authorizeRequests()
-               .antMatchers("/api/v1/account/my-account","/api/v1/loan/my-loan").authenticated()
+               .antMatchers("/api/v1/account/my-account").hasRole("ADMIN") //meka standed kramarak .database ekh role column ekh ROLE_ADMIN kiyala thiyenna one //.hasAuthority("admin")     //.authenticated() // this method is acessed only admin
+               .antMatchers("/api/v1/loan/my-loan").hasRole("USER")//database ekh role column ekh ROLE_USER kiyala thiyenna one  //.hasAuthority("user") // this method is acessed only user
                .antMatchers("/api/v1/notice/my-notice","/api/v1/user/register").permitAll()
                .and().formLogin().and().httpBasic();
 
