@@ -28,6 +28,7 @@ public class LoginController {
         try{
             String hashPassword = passwordEncoder.encode(user.getPassword());
             user.setPassword(hashPassword);
+            user.setRole("ROLE_"+user.getRole());
             User saveUser = userRepo.save(user);
 
             if(saveUser.getId() > 0){

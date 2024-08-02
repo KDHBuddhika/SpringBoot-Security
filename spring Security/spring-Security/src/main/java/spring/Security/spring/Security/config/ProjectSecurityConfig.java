@@ -3,6 +3,7 @@ package spring.Security.spring.Security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,20 +19,24 @@ import javax.sql.DataSource;
 import java.net.http.HttpRequest;
 
 @Configuration
+@EnableGlobalMethodSecurity(
+        prePostEnabled = true,
+        securedEnabled = true
+)
 public class ProjectSecurityConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)throws Exception{
        http.csrf().disable()   //disable by spring security is given becuse that enable block the post,put , delete request
                .authorizeRequests()
-               .antMatchers("/api/v1/account/my-account").hasRole("ADMIN") //meka standed kramarak .database ekh role column ekh ROLE_ADMIN kiyala thiyenna one //.hasAuthority("admin")     //.authenticated() // this method is acessed only admin
-               .antMatchers("/api/v1/loan/my-loan").hasRole("USER")//database ekh role column ekh ROLE_USER kiyala thiyenna one  //.hasAuthority("user") // this method is acessed only user
+               .antMatchers("/api/v1/account/my-account").authenticated()             //.hasRole("ADMIN") //meka standed kramarak .database ekh role column ekh ROLE_ADMIN kiyala thiyenna one //.hasAuthority("admin")     //.authenticated() // this method is acessed only admin
+               .antMatchers("/api/v1/loan/my-loan").authenticated()                   //.hasRole("USER")//database ekh role column ekh ROLE_USER kiyala thiyenna one  //.hasAuthority("user") // this method is acessed only user
                .antMatchers("/api/v1/notice/my-notice","/api/v1/user/register").permitAll()
                .and().formLogin().and().httpBasic();
 
        return http.build();
     }
-
+//when use .hasRole("ADMIN")  ,it do not need to add ROLE infront of ADMIN but ROLE_ADMIN is included on column value in database . because when u use .hasAuthority("admin") that databace include "" admin
 
     //crate user name and assword for 1 st time user request
 
